@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>โจทย์สอบปลายภาค: ระบบบันทึกรายรับ-รายจ่าย (Vue + Supabase)</title>
+    <!-- นำเข้า Tailwind CSS ผ่าน CDN เพื่อความรวดเร็ว -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- นำเข้าฟอนต์ Prompt จาก Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Prompt", sans-serif;
+        background-color: #f8fafc;
+      }
+      /* Custom scrollbar แบบบาง */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-50 text-slate-800 p-4 sm:p-8 md:p-12 min-h-screen flex items-center justify-center"
+  >
+    <div
+      class="max-w-4xl w-full mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
+    >
+      <!-- ส่วนหัว (Header) -->
+      <div
+        class="bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 p-8 md:p-10 text-white relative overflow-hidden"
+      >
+        <!-- ตกแต่งพื้นหลัง -->
+        <div
+          class="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 -mb-16 -ml-16 w-48 h-48 bg-blue-300 opacity-20 rounded-full blur-2xl"
+        ></div>
+
+        <div
+          class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+        >
+          <div>
+            <div
+              class="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-sm font-semibold text-blue-50 mb-3 border border-white/20"
+            >
+              Final Examination
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
+              โจทย์สอบปลายภาคปฏิบัติ
+            </h1>
+            <p class="text-blue-100 text-lg md:text-xl">
+              วิชาการพัฒนาเว็บแอปพลิเคชัน (Web Application Development)
+            </p>
+          </div>
+
+          <div
+            class="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl text-center border border-white/20 shadow-lg min-w-[150px]"
+          >
+            <span
+              class="block text-sm font-medium text-blue-100 uppercase tracking-widest mb-1"
+              >คะแนนเต็ม</span
+            >
+            <div class="flex items-baseline justify-center gap-1">
+              <span class="text-5xl font-extrabold text-white">100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- รายละเอียดโปรเจกต์ -->
+      <div class="p-8 md:p-10 border-b border-slate-100 bg-white">
+        <h2
+          class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3"
+        >
+          <span
+            class="bg-indigo-100 text-indigo-700 p-2.5 rounded-xl shadow-sm"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              ></path>
+            </svg>
+          </span>
+          ระบบบันทึกรายรับ-รายจ่าย (Income & Expense Tracker)
+        </h2>
+        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+          ให้นักศึกษาพัฒนาระบบบันทึกรายรับ-รายจ่ายอย่างง่าย
+          โดยประยุกต์ใช้เทคโนโลยีที่ได้เรียนมา ได้แก่
+          <strong>Vue.js</strong> สำหรับจัดการฝั่ง Frontend,
+          <strong>Tailwind CSS</strong> สำหรับตกแต่งความสวยงามของหน้าจอ และ
+          <strong>Supabase</strong> สำหรับจัดการฐานข้อมูล (Database)
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span
+            class="px-4 py-1.5 bg-[#42b883]/10 text-[#42b883] text-sm font-bold rounded-full border border-[#42b883]/20 flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M15.43,8.57L12,2.63L8.57,8.57H15.43M12,2.63L0,23.37H24L12,2.63M12,19.33L4.29,6h15.42L12,19.33Z"
+              />
+            </svg>
+            Vue.js
+          </span>
+          <span
+            class="px-4 py-1.5 bg-[#38bdf8]/10 text-[#0ea5e9] text-sm font-bold rounded-full border border-[#38bdf8]/20 flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.337,13.382,8.976,12,6.001,12z"
+              />
+            </svg>
+            Tailwind CSS
+          </span>
+          <span
+            class="px-4 py-1.5 bg-[#3ecf8e]/10 text-[#3ecf8e] text-sm font-bold rounded-full border border-[#3ecf8e]/20 flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M21.36 8.52a.7.7 0 0 0-.3-.5l-8.68-5a.69.69 0 0 0-.69 0l-8.68 5a.7.7 0 0 0-.3.5v7.69a.7.7 0 0 0 .3.5l8.68 5a.69.69 0 0 0 .69 0l8.68-5a.7.7 0 0 0 .3-.5V8.52ZM12 4.19l7 4.05-3.5 2-7-4.05 3.5-2ZM4.05 10l3.49 2v4l-3.49-2V10ZM12 21.05l-3.5-2v-4l3.5 2 3.5-2v4l-3.5 2Zm7.95-7.05-3.49 2v-4l3.49-2v4Z"
+              />
+            </svg>
+            Supabase
+          </span>
+        </div>
+
+        <div
+          class="mt-8 bg-[#f8fbff] rounded-2xl p-6 border border-blue-100/80 shadow-sm flex gap-4"
+        >
+          <div
+            class="bg-blue-100 text-blue-600 p-2.5 rounded-full h-fit shadow-sm"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-[#1e3a8a] mb-2 text-lg">
+              เกณฑ์การให้คะแนน
+            </h3>
+            <p class="text-[#1e40af]/80 text-[15px] mb-4 leading-relaxed">
+              เกณฑ์การให้คะแนนแบ่งออกเป็น 5 ส่วน
+              <strong class="text-blue-700"
+                >เมื่อนักศึกษาทำเสร็จสมบูรณ์ทั้งหมด
+                ให้เรียกอาจารย์เพื่อตรวจและรับคะแนนทีเดียว</strong
+              >
+              (สามารถทำสลับข้อกันได้ตามสะดวก)
+            </p>
+            <div
+              class="bg-[#fff1f2] text-[#be123c] p-4 rounded-xl border border-[#fecdd3] text-[15px] shadow-sm"
+            >
+              <strong
+                class="flex items-center gap-2 mb-2 text-[#9f1239] text-base"
+                ><svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  ></path>
+                </svg>
+                กฎการใช้อินเทอร์เน็ต:</strong
+              >
+              อนุญาตให้ Open Internet และเปิดเว็บเนื้อหาได้เต็มที่
+              <strong class="text-[#e11d48]">อนุญาตให้ใช้ AI ได้</strong><br />
+              <span class="text-[#e11d48]/90 font-medium mt-1 inline-block"
+                >พบเห็นครั้งแรก: ตักเตือน | พบเห็นครั้งที่สอง: ปรับตก
+                (คะแนนสอบเป็น 0 ทันที)</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ขั้นตอนต่างๆ (Steps) -->
+      <div class="p-8 md:p-10 bg-slate-50">
+        <h3
+          class="text-xl font-bold text-slate-800 mb-6 border-l-4 border-indigo-500 pl-4"
+        >
+          เกณฑ์การให้คะแนน (5 ขั้นตอน)
+        </h3>
+
+        <div class="space-y-8">
+          <!-- Step 1 -->
+          <div
+            class="relative bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all duration-300"
+          >
+            <div
+              class="absolute -top-3 -right-3 bg-emerald-500 text-white font-bold px-5 py-1.5 rounded-xl shadow-lg border-2 border-white transform rotate-3 hover:rotate-0 transition-transform"
+            >
+              10 คะแนน
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-lg"
+              >
+                1
+              </div>
+              <div class="flex-1 w-full">
+                <h4 class="text-lg font-bold text-emerald-900 mb-3">
+                  สร้างฐานข้อมูลด้วย Supabase
+                </h4>
+                <ul class="list-none text-slate-600 space-y-2 mb-5">
+                  <li class="flex items-start">
+                    <span class="text-emerald-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">สร้าง Project ใหม่บน Supabase</div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-400 mr-2 mt-0.5 flex-shrink-0"
+                      >✓</span
+                    >
+                    <div class="flex-1">
+                      สร้าง Table ชื่อ
+                      <code>transactions</code> โดยมีโครงสร้างดังนี้:
+                      <div
+                        class="mt-3 mb-3 overflow-hidden rounded-lg border border-slate-200 shadow-sm"
+                      >
+                        <table class="w-full text-sm text-left">
+                          <thead
+                            class="bg-slate-50 text-slate-700 border-b border-slate-200"
+                          >
+                            <tr>
+                              <th class="px-4 py-2.5 font-semibold">Name</th>
+                              <th class="px-4 py-2.5 font-semibold">Type</th>
+                              <th class="px-4 py-2.5 font-semibold">
+                                Default Value / Options
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-slate-100 bg-white">
+                            <tr>
+                              <td
+                                class="px-4 py-2 font-mono text-emerald-600 font-medium"
+                              >
+                                id
+                              </td>
+                              <td class="px-4 py-2">uuid</td>
+                              <td class="px-4 py-2 text-slate-500">
+                                Primary Key (PK)
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                class="px-4 py-2 font-mono text-emerald-600 font-medium"
+                              >
+                                type
+                              </td>
+                              <td class="px-4 py-2">text</td>
+                              <td class="px-4 py-2 text-slate-500">
+                                เก็บค่า 'income' หรือ 'expense'
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                class="px-4 py-2 font-mono text-emerald-600 font-medium"
+                              >
+                                title
+                              </td>
+                              <td class="px-4 py-2">text</td>
+                              <td class="px-4 py-2 text-slate-500">-</td>
+                            </tr>
+                            <tr>
+                              <td
+                                class="px-4 py-2 font-mono text-emerald-600 font-medium"
+                              >
+                                amount
+                              </td>
+                              <td class="px-4 py-2">numeric</td>
+                              <td class="px-4 py-2 text-slate-500">-</td>
+                            </tr>
+                            <tr>
+                              <td
+                                class="px-4 py-2 font-mono text-emerald-600 font-medium"
+                              >
+                                created_at
+                              </td>
+                              <td class="px-4 py-2">timestamp</td>
+                              <td class="px-4 py-2 text-slate-500">
+                                default: now()
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div
+                        class="mt-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 text-[14px]"
+                      >
+                        <strong class="text-emerald-800 block mb-2"
+                          >คำอธิบายฟิลด์ข้อมูล:</strong
+                        >
+                        <ul
+                          class="list-disc list-inside text-slate-600 space-y-1 ml-1"
+                        >
+                          <li>
+                            <code>id</code>: รหัสประจำรายการ
+                            (อ้างอิงอัตโนมัติไม่ซ้ำกัน)
+                          </li>
+                          <li>
+                            <code>type</code>: ประเภทของรายการ เก็บค่าเป็น
+                            <code>'income'</code> (รายรับ) หรือ
+                            <code>'expense'</code> (รายจ่าย) เท่านั้น
+                          </li>
+                          <li>
+                            <code>title</code>: ชื่อหรือรายละเอียดของรายการ
+                            (เช่น เงินเดือน, ค่าไฟ)
+                          </li>
+                          <li><code>amount</code>: จำนวนเงิน</li>
+                          <li>
+                            <code>created_at</code>:
+                            วันที่และเวลาที่บันทึกรายการ
+                            (ระบบจัดการให้อัตโนมัติ)
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      <span
+                        class="bg-[#fee2e2] text-[#b91c1c] font-bold px-2 py-0.5 rounded shadow-sm border border-[#fca5a5] text-xs uppercase tracking-wide mr-1"
+                        >สำคัญมาก</span
+                      >
+                      อย่าลืม
+                      <strong class="text-slate-800"
+                        >ปิด RLS (Disable Row Level Security)</strong
+                      >
+                      หรือตั้งค่า Policy ให้สามารถ Insert/Select/Delete ได้แบบ
+                      Public
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="relative bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300"
+          >
+            <div
+              class="absolute -top-3 -right-3 bg-indigo-600 text-white font-bold px-5 py-1.5 rounded-xl shadow-lg border-2 border-white transform rotate-3 hover:rotate-0 transition-transform"
+            >
+              20 คะแนน
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg"
+              >
+                2
+              </div>
+              <div class="flex-1 w-full">
+                <h4 class="text-lg font-bold text-indigo-900 mb-3">
+                  ตั้งค่าโปรเจกต์ Vue.js และตกแต่ง UI
+                </h4>
+                <ul class="list-none text-slate-600 space-y-2 mb-5">
+                  <li class="flex items-start">
+                    <span class="text-indigo-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      สร้างโปรเจกต์ Vue.js ใหม่ (แนะนำให้ใช้ Vite)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-indigo-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ติดตั้งและตั้งค่า Tailwind CSS ให้พร้อมใช้งาน
+                      <ul
+                        class="list-[circle] list-inside ml-5 mt-1.5 text-sm text-slate-500 space-y-1"
+                      >
+                        <li>
+                          ติดตั้งโดยใช้คำสั่ง
+                          <code>npm install tailwindcss @tailwindcss/vite</code>
+                        </li>
+                        <li>
+                          ตั้งค่าใน <code>vite.config.js</code> และ
+                          <code>style.css</code> ให้ถูกต้อง
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-indigo-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ติดตั้ง
+                      <code>@supabase/supabase-js</code> และเขียนโค้ดเชื่อมต่อ
+                      (Client) ใน Vue
+                      <ul
+                        class="list-[circle] list-inside ml-5 mt-1.5 text-sm text-slate-500 space-y-1"
+                      >
+                        <li>สร้างไฟล์ <code>.env</code> กำหนดค่าให้ถูกต้อง</li>
+                        <li>สร้างไฟล์ <code>supabase.js</code> ให้ถูกต้อง</li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-indigo-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      สร้างองค์ประกอบต่างๆให้สวยงาม
+                      <strong class="text-indigo-600"
+                        >โดยแบ่งเป็น 3 Component แล้วนำมาแสดงผลรวมกันที่
+                        App.vue</strong
+                      >
+                      ประกอบด้วย:
+                      <ul
+                        class="list-[circle] list-inside ml-5 mt-1.5 text-sm text-slate-500 space-y-1"
+                      >
+                        <li>
+                          <code>Dashboard.vue</code> (แสดงยอดรวมรายรับ,
+                          ยอดรวมรายจ่าย, ยอดคงเหลือ)
+                        </li>
+                        <li>
+                          <code>TransactionForm.vue</code>
+                          (ฟอร์มสำหรับเลือกประเภท รับ/จ่าย, กรอกชื่อรายการ,
+                          และจำนวนเงิน)
+                        </li>
+                        <li>
+                          <code>TransactionList.vue</code>
+                          (ตารางหรือรายการแสดงประวัติการทำรายการ)
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="relative bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition-all duration-300"
+          >
+            <div
+              class="absolute -top-3 -right-3 bg-sky-500 text-white font-bold px-5 py-1.5 rounded-xl shadow-lg border-2 border-white transform rotate-3 hover:rotate-0 transition-transform"
+            >
+              20 คะแนน
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center font-bold text-lg"
+              >
+                3
+              </div>
+              <div class="flex-1 w-full">
+                <h4 class="text-lg font-bold text-sky-900 mb-3">
+                  การบันทึกข้อมูล (Insert Data)
+                </h4>
+                <ul class="list-none text-slate-600 space-y-2 mb-5">
+                  <li class="flex items-start">
+                    <span class="text-sky-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เขียนฟังก์ชันผูกข้อมูลกับฟอร์ม (v-model)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-sky-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ดักจับ Validation (เช่น จำนวนเงินต้องมากกว่า 0
+                      และชื่อรายการห้ามว่าง)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-sky-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เมื่อกดบันทึก ให้ Insert ข้อมูลลงตาราง
+                      <code>transactions</code> บน Supabase
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-sky-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ล้างข้อมูลในฟอร์มให้ว่างหลังจากบันทึกสำเร็จ
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div
+            class="relative bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400 transition-all duration-300"
+          >
+            <div
+              class="absolute -top-3 -right-3 bg-amber-500 text-white font-bold px-5 py-1.5 rounded-xl shadow-lg border-2 border-white transform rotate-3 hover:rotate-0 transition-transform"
+            >
+              25 คะแนน
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-bold text-lg"
+              >
+                4
+              </div>
+              <div class="flex-1 w-full">
+                <h4 class="text-lg font-bold text-amber-900 mb-3">
+                  ดึงข้อมูลและแสดงผล (Fetch & Display)
+                </h4>
+                <ul class="list-none text-slate-600 space-y-2 mb-5">
+                  <li class="flex items-start">
+                    <span class="text-amber-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ใช้ Lifecycle Hook (<code>onMounted</code>) เพื่อดึงข้อมูล
+                      (Select) ทันทีที่เปิดหน้าเว็บ
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-amber-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เรียงลำดับข้อมูลจากรายการล่าสุดไปเก่าสุด (Order by
+                      created_at descending)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-amber-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      นำข้อมูลมาวนลูป (<code>v-for</code>) แสดงในส่วน History
+                      List
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-amber-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      ตกแต่งรายการรับ-จ่ายให้แยกแยะง่าย (เช่น
+                      รายรับตัวหนังสือสีเขียวมีเครื่องหมาย +,
+                      รายจ่ายสีแดงมีเครื่องหมาย -)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-amber-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      หลังจาก Insert ข้อมูลใหม่ในขั้นตอนที่ 3 เสร็จ
+                      ต้องเรียกฟังก์ชันดึงข้อมูลใหม่ เพื่อให้อัปเดต UI ทันที
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div
+            class="relative bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300"
+          >
+            <div
+              class="absolute -top-3 -right-3 bg-pink-500 text-white font-bold px-5 py-1.5 rounded-xl shadow-lg border-2 border-white transform rotate-3 hover:rotate-0 transition-transform"
+            >
+              25 คะแนน
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center font-bold text-lg"
+              >
+                5
+              </div>
+              <div class="flex-1 w-full">
+                <h4 class="text-lg font-bold text-pink-900 mb-3">
+                  สรุปยอด (Dashboard) และลบข้อมูล (Delete)
+                </h4>
+                <ul class="list-none text-slate-600 space-y-2 mb-5">
+                  <li class="flex items-start">
+                    <span class="text-pink-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เขียนฟังก์ชันคำนวณยอด
+                      <strong class="text-slate-800">รวมรายรับ</strong> และ
+                      <strong class="text-slate-800">รวมรายจ่าย</strong>
+                      จากข้อมูลทั้งหมด (แนะนำให้ใช้ computed)
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-pink-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      คำนวณ
+                      <strong class="text-slate-800">ยอดคงเหลือ</strong> (รายรับ
+                      - รายจ่าย) และนำไปแสดงในส่วน Dashboard ด้านบนให้ถูกต้อง
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-pink-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เพิ่มปุ่ม "ลบ" (Delete) ต่อท้ายแต่ละรายการประวัติ
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-pink-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      เมื่อกดลบ ให้ลบข้อมูลนั้นออกจาก Supabase ตาม id
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-pink-400 mr-2 flex-shrink-0">✓</span>
+                    <div class="flex-1">
+                      อัปเดตรายการและยอดสรุปบนหน้าจอทันทีเมื่อลบสำเร็จ
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-slate-900 text-slate-400 p-6 text-center text-sm">
+        <p>
+          © การสอบปฏิบัติรายวิชา Web Application Development -
+          ขอให้นักศึกษาทุกคนโชคดี
+        </p>
+      </div>
+    </div>
+    <!-- Floating Button for Tailwind Cheat Sheet -->
+    <button
+      onclick="
+        document.getElementById('tailwind-modal').classList.remove('hidden')
+      "
+      class="fixed bottom-8 right-8 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white px-6 py-4 rounded-full shadow-[0_10px_25px_rgba(168,85,247,0.5)] flex items-center justify-center gap-3 transition-all hover:scale-110 hover:-translate-y-1 border-2 border-white/50 z-40 animate-[pulse_3s_ease-in-out_infinite]"
+    >
+      <svg
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+        ></path>
+      </svg>
+      <span class="font-bold whitespace-nowrap text-lg drop-shadow-md">
+        รวม Class ที่จำเป็นสำหรับสร้างหน้า UI
+      </span>
+    </button>
+
+    <!-- Tailwind Cheat Sheet Modal -->
+    <div
+      id="tailwind-modal"
+      class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden"
+      >
+        <div
+          class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50"
+        >
+          <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <svg
+              class="w-6 h-6 text-indigo-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+              ></path>
+            </svg>
+            Tailwind CSS Cheat Sheet
+          </h3>
+          <button
+            onclick="
+              document.getElementById('tailwind-modal').classList.add('hidden')
+            "
+            class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-2 rounded-full transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto space-y-8 flex-1">
+          <!-- Buttons -->
+          <div>
+            <h4
+              class="font-semibold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3"
+            >
+              Buttons (ปุ่ม)
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <button
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors mb-3"
+                >
+                  Primary Button
+                </button>
+                <div class="relative">
+                  <code
+                    class="text-xs text-pink-600 block bg-slate-100 p-3 rounded-lg overflow-x-auto"
+                    >class="bg-indigo-600 hover:bg-indigo-700 text-white px-4
+                    py-2 rounded-lg font-medium transition-colors"</code
+                  >
+                </div>
+              </div>
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <button
+                  class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm mb-3"
+                >
+                  Danger Button
+                </button>
+                <div class="relative">
+                  <code
+                    class="text-xs text-pink-600 block bg-slate-100 p-3 rounded-lg overflow-x-auto"
+                    >class="bg-red-500 hover:bg-red-600 text-white px-4 py-2
+                    rounded-lg font-medium transition-colors shadow-sm"</code
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Textboxes -->
+          <div>
+            <h4
+              class="font-semibold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3"
+            >
+              Forms & Inputs (ฟอร์ม)
+            </h4>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-slate-700 mb-1"
+                  >Label Text</label
+                >
+                <input
+                  type="text"
+                  placeholder="Enter text..."
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                />
+              </div>
+              <code
+                class="text-xs text-pink-600 block bg-slate-100 p-3 rounded-lg overflow-x-auto"
+                >class="w-full px-4 py-2 border border-slate-300 rounded-lg
+                focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                outline-none transition-all"</code
+              >
+            </div>
+          </div>
+
+          <!-- Cards -->
+          <div>
+            <h4
+              class="font-semibold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3"
+            >
+              Cards (การ์ด)
+            </h4>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div
+                class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow mb-3"
+              >
+                <h5 class="font-bold text-slate-800">Card Title</h5>
+                <p class="text-slate-500 text-sm mt-1">
+                  Card content goes here.
+                </p>
+              </div>
+              <code
+                class="text-xs text-pink-600 block bg-slate-100 p-3 rounded-lg overflow-x-auto"
+                >class="bg-white p-5 rounded-2xl shadow-sm border
+                border-slate-100 hover:shadow-md transition-shadow"</code
+              >
+            </div>
+          </div>
+
+          <!-- Tables -->
+          <div>
+            <h4
+              class="font-semibold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3"
+            >
+              Tables (ตาราง)
+            </h4>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-slate-200 mb-3"
+              >
+                <table class="w-full text-sm text-left">
+                  <thead
+                    class="bg-slate-50 text-slate-700 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="px-4 py-3">Header 1</th>
+                      <th class="px-4 py-3">Header 2</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 bg-white">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="px-4 py-3">Data 1</td>
+                      <td class="px-4 py-3">Data 2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <code
+                class="text-xs text-pink-600 block bg-slate-100 p-3 rounded-lg overflow-x-auto whitespace-pre-wrap"
+                >&lt;div class="overflow-x-auto rounded-lg border
+                border-slate-200"&gt; &lt;table class="w-full text-sm
+                text-left"&gt; &lt;thead class="bg-slate-50 text-slate-700
+                border-b border-slate-200"&gt; &lt;tr&gt;&lt;th class="px-4
+                py-3"&gt;Header 1&lt;/th&gt;&lt;/tr&gt; &lt;/thead&gt; &lt;tbody
+                class="divide-y divide-slate-100 bg-white"&gt; &lt;tr
+                class="hover:bg-slate-50 transition-colors"&gt;&lt;td
+                class="px-4 py-3"&gt;Data 1&lt;/td&gt;&lt;/tr&gt; &lt;/tbody&gt;
+                &lt;/table&gt; &lt;/div&gt;</code
+              >
+            </div>
+          </div>
+
+          <!-- Status Badges -->
+          <div>
+            <h4
+              class="font-semibold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3"
+            >
+              Badges (ป้ายสถานะ)
+            </h4>
+            <div
+              class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-wrap gap-4 items-end"
+            >
+              <div>
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mb-2"
+                  >+ Income</span
+                >
+                <code
+                  class="text-xs text-pink-600 block bg-slate-100 p-2 rounded-lg"
+                  >class="inline-flex items-center px-2.5 py-0.5 rounded-full
+                  text-xs font-medium bg-green-100 text-green-800"</code
+                >
+              </div>
+              <div>
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 mb-2"
+                  >- Expense</span
+                >
+                <code
+                  class="text-xs text-pink-600 block bg-slate-100 p-2 rounded-lg"
+                  >class="inline-flex items-center px-2.5 py-0.5 rounded-full
+                  text-xs font-medium bg-red-100 text-red-800"</code
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="p-4 border-t border-slate-100 bg-slate-50 text-center text-sm text-slate-500"
+        >
+          สามารถ Copy โค้ดคลาสเหล่านี้ไปประยุกต์ใช้ในโปรเจกต์ได้เลย 🚀
+        </div>
+      </div>
+    </div>
+    <!-- Floating Button for UI Example -->
+    <button
+      onclick="
+        document.getElementById('ui-example-modal').classList.remove('hidden')
+      "
+      class="fixed bottom-8 left-8 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-4 rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.5)] flex items-center justify-center gap-3 transition-all hover:scale-110 hover:-translate-y-1 border-2 border-white/50 z-40"
+    >
+      <svg
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+        ></path>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+        ></path>
+      </svg>
+      <span class="font-bold whitespace-nowrap text-lg drop-shadow-md">
+        👁️ ดูตัวอย่าง UI & Components
+      </span>
+    </button>
+
+    <!-- UI Example Modal -->
+    <div
+      id="ui-example-modal"
+      class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden"
+      >
+        <!-- Modal Header -->
+        <div
+          class="p-6 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-white"
+        >
+          <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+            <svg
+              class="w-7 h-7 text-emerald-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+              ></path>
+            </svg>
+            ตัวอย่างโครงสร้าง UI และ Components
+          </h3>
+          <button
+            onclick="
+              document
+                .getElementById('ui-example-modal')
+                .classList.add('hidden')
+            "
+            class="text-slate-400 hover:text-slate-700 bg-white hover:bg-slate-100 p-2.5 rounded-full transition-colors border border-slate-200"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-8 overflow-y-auto bg-slate-100 flex-1 relative">
+          <div class="text-center mb-6">
+            <p class="text-slate-600">
+              ลองเอาเมาส์ชี้ (Hover) ที่ส่วนต่างๆ ของหน้าจอ เพื่อดูชื่อ
+              Component ที่รับผิดชอบส่วนนั้นๆ
+            </p>
+          </div>
+
+          <div
+            class="max-w-2xl w-full mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-6 relative"
+          >
+            <!-- App.vue Label -->
+            <div
+              class="absolute -top-3 -left-3 bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-md z-20 flex items-center gap-1.5"
+            >
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M15.43,8.57L12,2.63L8.57,8.57H15.43M12,2.63L0,23.37H24L12,2.63M12,19.33L4.29,6h15.42L12,19.33Z"
+                />
+              </svg>
+              App.vue (Layout หลัก)
+            </div>
+
+            <!-- Dashboard.vue Component -->
+            <div
+              class="relative group cursor-crosshair border-[3px] border-dashed border-transparent hover:border-indigo-500 rounded-xl transition-all duration-300"
+            >
+              <div
+                class="absolute -top-4 -right-2 bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 flex items-center gap-1"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M15.43,8.57L12,2.63L8.57,8.57H15.43M12,2.63L0,23.37H24L12,2.63M12,19.33L4.29,6h15.42L12,19.33Z"
+                  />
+                </svg>
+                Dashboard.vue
+              </div>
+              <!-- Mockup Content -->
+              <div
+                class="bg-white p-6 rounded-xl shadow-sm pointer-events-none group-hover:bg-indigo-50/50 transition-colors border border-slate-100"
+              >
+                <h3
+                  class="text-slate-500 text-sm font-semibold mb-3 text-center"
+                >
+                  ยอดคงเหลือ
+                </h3>
+                <div
+                  class="text-4xl font-extrabold text-slate-800 mb-6 text-center tracking-tight"
+                >
+                  ฿ 15,000.00
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div
+                    class="bg-green-50 p-4 rounded-xl border border-green-100 text-center"
+                  >
+                    <div
+                      class="text-green-600 text-xs font-bold mb-1 uppercase tracking-wide"
+                    >
+                      รายรับ
+                    </div>
+                    <div class="text-green-700 font-bold text-lg">
+                      ฿ 20,000.00
+                    </div>
+                  </div>
+                  <div
+                    class="bg-red-50 p-4 rounded-xl border border-red-100 text-center"
+                  >
+                    <div
+                      class="text-red-600 text-xs font-bold mb-1 uppercase tracking-wide"
+                    >
+                      รายจ่าย
+                    </div>
+                    <div class="text-red-700 font-bold text-lg">฿ 5,000.00</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layout for Form and List -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+              <!-- TransactionForm.vue Component (col-span-2) -->
+              <div
+                class="md:col-span-2 relative group cursor-crosshair border-[3px] border-dashed border-transparent hover:border-sky-500 rounded-xl transition-all duration-300 h-fit"
+              >
+                <div
+                  class="absolute -top-4 -right-2 bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 flex items-center gap-1"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M15.43,8.57L12,2.63L8.57,8.57H15.43M12,2.63L0,23.37H24L12,2.63M12,19.33L4.29,6h15.42L12,19.33Z"
+                    />
+                  </svg>
+                  TransactionForm.vue
+                </div>
+                <div
+                  class="bg-white p-5 rounded-xl shadow-sm pointer-events-none group-hover:bg-sky-50/50 transition-colors border border-slate-100"
+                >
+                  <h3
+                    class="font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2"
+                  >
+                    เพิ่มรายการใหม่
+                  </h3>
+                  <div class="space-y-4">
+                    <div>
+                      <div class="h-4 w-16 bg-slate-200 rounded mb-1.5"></div>
+                      <div
+                        class="h-10 bg-slate-50 rounded-lg border border-slate-200"
+                      ></div>
+                    </div>
+                    <div>
+                      <div class="h-4 w-24 bg-slate-200 rounded mb-1.5"></div>
+                      <div
+                        class="h-10 bg-slate-50 rounded-lg border border-slate-200"
+                      ></div>
+                    </div>
+                    <div>
+                      <div class="h-4 w-12 bg-slate-200 rounded mb-1.5"></div>
+                      <div
+                        class="h-10 bg-slate-50 rounded-lg border border-slate-200"
+                      ></div>
+                    </div>
+                    <div
+                      class="h-11 bg-indigo-600 rounded-lg mt-2 flex items-center justify-center"
+                    >
+                      <div class="h-4 w-20 bg-white/50 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TransactionList.vue Component (col-span-3) -->
+              <div
+                class="md:col-span-3 relative group cursor-crosshair border-[3px] border-dashed border-transparent hover:border-emerald-500 rounded-xl transition-all duration-300 h-fit"
+              >
+                <div
+                  class="absolute -top-4 -right-2 bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 flex items-center gap-1"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M15.43,8.57L12,2.63L8.57,8.57H15.43M12,2.63L0,23.37H24L12,2.63M12,19.33L4.29,6h15.42L12,19.33Z"
+                    />
+                  </svg>
+                  TransactionList.vue
+                </div>
+                <div
+                  class="bg-white p-5 rounded-xl shadow-sm pointer-events-none group-hover:bg-emerald-50/50 transition-colors border border-slate-100"
+                >
+                  <h3
+                    class="font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2"
+                  >
+                    ประวัติการทำรายการ
+                  </h3>
+                  <div class="space-y-3">
+                    <div
+                      class="p-3 bg-white border border-slate-200 rounded-lg flex justify-between items-center shadow-sm"
+                    >
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600"
+                        >
+                          <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M7 11l5-5m0 0l5 5m-5-5v12"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <div class="font-bold text-slate-700">เงินเดือน</div>
+                          <div class="text-xs text-slate-400">
+                            12 ก.ย. 2026, 10:00 น.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <div class="text-green-600 font-bold">+ ฿20,000</div>
+                        <div
+                          class="w-8 h-8 rounded bg-red-50 flex items-center justify-center"
+                        >
+                          <svg
+                            class="w-4 h-4 text-red-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="p-3 bg-white border border-slate-200 rounded-lg flex justify-between items-center shadow-sm"
+                    >
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"
+                        >
+                          <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M17 13l-5 5m0 0l-5-5m5 5V6"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <div class="font-bold text-slate-700">ค่าไฟ</div>
+                          <div class="text-xs text-slate-400">
+                            13 ก.ย. 2026, 14:30 น.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <div class="text-red-500 font-bold">- ฿5,000</div>
+                        <div
+                          class="w-8 h-8 rounded bg-red-50 flex items-center justify-center"
+                        >
+                          <svg
+                            class="w-4 h-4 text-red-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
